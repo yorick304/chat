@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <title>websocket and node.js</title>
+    <meta charset="utf-8" />
+    <script src="jquery.js"></script>
+	<script src="../serverjs/zTool.js"></script>
+	<script src="../serverjs/chatLib.js"></script>
+	<script src="DateUtil.js"></script>
+    <script src="http://localhost:8080/socket.io/socket.io.js"></script>
+    <script src="chat.js"></script>
+
+    <link rel="stylesheet" href="bootstrap/bootstrap.css">
+      <link rel="stylesheet" href="index.css">
+  </head>
+  <body>
+	<div id='errorPage' class='page' style='display:none;'>
+		<h1>
+		当前浏览器不支持WebSocket，请使用其他浏览器，例如chrome 4.0.249.0 +
+		</h1>
+	</div>
+	<div id='prePage' class='page row' style='width:476px;margin-top: 180px'>
+        <div class="col-md-8">
+            <input type="text" id='nickInput' class="form-control" placeholder="请输入您的昵称">
+        </div>
+        <div class="col-md-1">
+            <button id='open' type="button" class="btn btn-info">进入聊天室</button>
+        </div>
+		<!--<input id='nickInput' type='text' placeholder="请输入您的昵称"  />&nbsp;-->
+		<!--<input id='open' class="bg-info" type='button' value='进入聊天室'  />-->
+
+	</div>
+	<div id='mainPage' class='page' style='display:none;'>
+		<div style='overflow:hidden;'>
+			<div class='talkLeft'>
+				<div id='talkFrame'></div>
+				<div id='inputDiv'>
+					<textarea placeholder="嗨，随便说点啥呗" id="message"></textarea>
+				</div>
+				<div style='overflow:hidden;'>
+                    <div class="col-md-5">
+                        <button id='logout' type="button" class="btn btn-danger">退出</button>
+                    </div>
+                    <div class="col-md-7">
+                        <button id='send' type="button" class="btn btn-info f-right">发送</button>
+                    </div>
+					<!--<input class='f-right' type='button' value='发送' id="send" />-->
+				</div>
+			</div>
+			<div class='talkRight'>
+				<div id='onlineUsers'></div>
+			</div>
+		</div>
+		<!--<div>-->
+            <!--<button id='logout' type="button" class="btn btn-danger">退出</button>-->
+            <!--&lt;!&ndash;<input type='button' value='退出' id="logout" />&ndash;&gt;-->
+		<!--</div>-->
+	</div>
+  </body>
+</html>
