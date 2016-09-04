@@ -1,27 +1,28 @@
-//ÒıÈëzToolÄ£¿é
-var zTool = require("./zTool");
+//å·¥å…·ç±»
+var zTool = require("./chartTool");
 var onlineUserMap = new zTool.SimpleMap();
 var historyContent = new zTool.CircleList(100);
-//ÒıÈëÁÄÌìÄ£¿é
+//è§£æå·¥å…·ç±»
 var chatLib = require("./chatLib");
 var EVENT_TYPE = chatLib.EVENT_TYPE;
 var PORT = chatLib.PORT;
 
-//Ê¹ÓÃsocket.ioÖ±½ÓÆô¶¯http·şÎñ
+//åœ¨æœåŠ¡ç«¯å»ºç«‹èµ·socket.io
 var io = require("socket.io").listen(PORT);
-//½øĞĞsocketÁ¬½Ó¼àÌı
+//åœ¨æœåŠ¡å™¨ç«¯ç›‘å¬é“¾æ¥
 io.sockets.on("connection",function(socket){
+    //åœ¨æœåŠ¡å™¨ç«¯ç›‘å¬æ¶ˆæ¯
     socket.on("message",function(message){
         var mData = chatLib.analyzeMessageData(message);
         if (mData && mData.EVENT) {
 			switch (mData.EVENT) {
-			case EVENT_TYPE.LOGIN: // ĞÂÓÃ»§Á¬½Ó
+			case EVENT_TYPE.LOGIN: // ç™»é™†
 				var newUser = {'uid':socket.id, 'nick':chatLib.getMsgFirstDataValue(mData)};
 
-				// °ÑĞÂÁ¬½ÓµÄÓÃ»§Ôö¼Óµ½ÔÚÏßÓÃ»§ÁĞ±í
+				// ç”¨æˆ·æ”¾åœ¨mapä¸­
 				onlineUserMap.put(socket.id, newUser);
 
-				// °ÑĞÂÓÃ»§µÄĞÅÏ¢¹ã²¥¸øÔÚÏßÓÃ»§
+				// è¿”å›çš„æ•°æ®åŒ…
                 var data = JSON.stringify({
                 'user':onlineUserMap.get(socket.id),
                 'EVENT' : EVENT_TYPE.LOGIN,
@@ -29,12 +30,12 @@ io.sockets.on("connection",function(socket){
                 'users':onlineUserMap.values(),
                 'historyContent':historyContent.values()
                });
-                io.sockets.emit('message',data);//¹ã²¥
-                //socket.emit('message',data);
-               // socket.broadcast.emit('message', data);//ÎŞĞ§°¡°¡°¡°¡£¡ÎÒÊÔÁËºÜ¶à´Î£¬ËãÊÇ¿Ó
+                io.sockets.emit('message',data);//ç™»é™†ä¹‹åçš„è¿”å›æ•°æ®åŒ…
+                //socket.emit('message',data);//æµ‹è¯•
+               // socket.broadcast.emit('message', data);//æµ‹è¯•
 				break;
 
-			case EVENT_TYPE.SPEAK: // ÓÃ»§·¢ÑÔ
+			case EVENT_TYPE.SPEAK: // èŠå¤©
 				var content = chatLib.getMsgFirstDataValue(mData);
                 var data = JSON.stringify({
                     'user':onlineUserMap.get(socket.id),
@@ -43,11 +44,11 @@ io.sockets.on("connection",function(socket){
                 });
                 //socket.emit('message',data);
                 io.sockets.emit('message',data);
-                //·şÎñÆ÷¶Ë±£´æÌ¸»°µÄÀúÊ·¼ÇÂ¼
+                //æ·»åŠ å†å²è®°å½•
 				historyContent.add({'user':onlineUserMap.get(socket.id),'content':content,'time':new Date().getTime()});
 				break;
 
-            case EVENT_TYPE.LOGOUT: // ÓÃ»§ÇëÇóÍË³ö
+            case EVENT_TYPE.LOGOUT: //é€€å‡º
                 var user = mData.values[0];
                 onlineUserMap.remove(user.uid);
                 var data = JSON.stringify({
@@ -62,7 +63,7 @@ io.sockets.on("connection",function(socket){
 			}
 
 		} else {
-			// ÊÂ¼şÀàĞÍ³ö´í£¬¼ÇÂ¼ÈÕÖ¾£¬Ïòµ±Ç°ÓÃ»§·¢ËÍ´íÎóĞÅÏ¢
+			// æ²¡æœ‰çŠ¶æ€
 			console.log('desc:message,userId:' + socket.id + ',message:' + message);
             var data = JSON.stringify({
                 'uid':socket.id,

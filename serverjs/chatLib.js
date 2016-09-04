@@ -3,10 +3,10 @@
 	exports.EVENT_TYPE = {'LOGIN':'LOGIN', 'LOGOUT':'LOGOUT', 'SPEAK':'SPEAK', 'LIST_USER':'LIST_USER', 'ERROR':'ERROR', 'LIST_HISTORY':'LIST_HISTORY'};
 
 	// 服务端口
-	exports.PORT = 8080;
+	exports.PORT = 9002;
 
 	// 服务端口
-	exports.HOST = "localhost";
+	exports.HOST = "http://192.168.31.183";
     //解析JSON数据的消息
 	var analyzeMessageData = exports.analyzeMessageData = function(message) {
 		try {
@@ -28,11 +28,11 @@
 		return '';
 	}
 
-})( (function(){
+})((function(){
     if(typeof exports === 'undefined') {
         window.chatLib = {};
         return window.chatLib;
     } else {
         return exports;
     }
-})() );
+})());

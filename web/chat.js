@@ -4,9 +4,11 @@ var PORT = chatLib.PORT;
 
 $(document).ready(function() {
 	var socket = null;
-	var onlineUserMap = new zTool.SimpleMap();//获取在线用户的Map
+	var onlineUserMap = new chartTool.SimpleMap();//获取在线用户的Map
 	var currentUser = null;
 	var currentUserNick = null;
+    var loginTime = 0;
+    var me = null;
     //检查浏览器是否支持WebSocket
 	if (typeof WebSocket === 'undefined') {
 		$("#prePage").hide();
@@ -14,27 +16,28 @@ $(document).ready(function() {
 	}
    //更新在线人数
 	function updateOnlineUser() {
+        $('#currentUser').html("<div>当前用户："+me.nick+"</div>");
 		var html = ["<div>在线用户(" + onlineUserMap.size() + ")</div>"];
 		if (onlineUserMap.size() > 0) {
 			var users = onlineUserMap.values();
             var number = users.length;
 			for ( var i=0;i<number;i++) {
-				html.push("<div>");
-				if (users[i].uid == currentUser.uid) {
-					html.push("<b>" + formatUserString(users[i]) + "(我)</b>");
+				html.push("<div class=''>");
+				if (users[i].uid == me.uid) {
+					html.push("<b>" + formatUserString(users[i]) + "</b>");
 				} else {
 					html.push(formatUserString(users[i]));
 				}
 				html.push("</div>");
 			}
 		}
-
 		$("#onlineUsers").html(html.join(''));
 	}
 
     //发送消息
 	function appendMessage(msg) {
 		$("#talkFrame").append("<div>" + msg + "</div>");
+        $('#talkFrame').scrollTop($("#talkFrame").scrollTop()+200);
 	}
     //解析用户信息
 	function formatUserString(user) {
@@ -79,8 +82,11 @@ $(document).ready(function() {
 		$("#mainPage").show();
 		reset();
 
-        socket = io.connect('http://localhost:8080');
-        onlineUserMap = new zTool.SimpleMap();
+        socket = io.connect(HOST+':'+PORT,{
+           "transports":['websocket','polling']
+        });
+
+        onlineUserMap = new chartTool.SimpleMap();
         socket.on('connect', function () {
             socket.emit('message', JSON.stringify({
                 'EVENT' : EVENT_TYPE.LOGIN,
@@ -93,8 +99,14 @@ $(document).ready(function() {
             var mData = chatLib.analyzeMessageData(message);
             if (mData && mData.EVENT) {
                 switch (mData.EVENT) {
-                    case EVENT_TYPE.LOGIN: // 新用户连接
+                    case EVENT_TYPE.LOGIN: 
+                        // 新用户连接
                         var user = mData.values[0];
+                        loginTime++;
+                        if(loginTime==1){
+                            me = user;
+                        }
+                        console.log('loginTime'+loginTime);
                         //获得所有在线用户
                         var users = mData.users;
                         if (users && users.length) {
@@ -117,6 +129,7 @@ $(document).ready(function() {
                             appendMessage("<span class='gray'>==================以上为最近的历史消息==================</span>");
                         }
                         updateOnlineUser();
+                        $('#onlineUsers').scrollTop($("#onlineUsers").scrollTop()+20);
                         appendMessage(formatUserTalkString(user) + "[进入房间]");
                         break;
 
@@ -189,6 +202,7 @@ $(document).ready(function() {
             'values' : [currentUser]
         });
         socket.emit('message',data);
+        location.reload();
     }
     $("#logout").click(function(event){
         logout();

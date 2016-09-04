@@ -1,13 +1,13 @@
 <!doctype html>
 <html>
   <head>
-    <title>websocket and node.js</title>
+    <title>websocket</title>
     <meta charset="utf-8" />
     <script src="jquery.js"></script>
-	<script src="../serverjs/zTool.js"></script>
+	<script src="../serverjs/chartTool.js"></script>
 	<script src="../serverjs/chatLib.js"></script>
 	<script src="DateUtil.js"></script>
-    <script src="http://localhost:8080/socket.io/socket.io.js"></script>
+    <script src="/web/socket.io/socket.io.js"></script>
     <script src="chat.js"></script>
 
     <link rel="stylesheet" href="bootstrap/bootstrap.css">
@@ -48,6 +48,7 @@
 				</div>
 			</div>
 			<div class='talkRight'>
+				<div id='currentUser'></div>
 				<div id='onlineUsers'></div>
 			</div>
 		</div>
