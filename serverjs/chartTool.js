@@ -1,4 +1,5 @@
 (function (exports) {
+	//设置SimpleMap对象
 	var SimpleMap = exports.SimpleMap = function() {
 		this.map = {};
 		this.mapSize = 0;
@@ -50,7 +51,7 @@
 		}
 		return theValue;
 	};
-
+	//循环遍历List的方法
 	var CircleList = exports.CircleList = function(maxSize) {
 		this.maxSize = (maxSize || 10);
 		this.list = [];
@@ -92,8 +93,8 @@
 
 })( (function(){
     if(typeof exports === 'undefined') {
-        window.zTool = {};
-        return window.zTool;
+        window.chartTool = {};
+        return window.chartTool;
     } else {
         return exports;
     }
